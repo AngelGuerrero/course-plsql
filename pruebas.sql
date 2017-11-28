@@ -1,0 +1,27 @@
+CREATE TABLE MY_EMPLOYEE AS SELECT * FROM EMPLOYEES;
+
+DROP TABLE MY_EMPLOYEE;
+
+SELECT * FROM MY_EMPLOYEE ORDER BY 1;
+
+CREATE OR REPLACE TRIGGER prueba
+BEFORE INSERT OR UPDATE ON MY_EMPLOYEE
+FOR EACH ROW
+DECLARE
+  mensaje VARCHAR2(25) := 'Empleado ';
+BEGIN
+  dbms_output.put_line(mensaje || :old.last_name || ' modificado');
+END;
+/
+
+UPDATE MY_EMPLOYEE
+SET last_name = 'Kingtest4'
+WHERE last_name = 'Kingtest3';
+
+
+DROP TRIGGER prueba;
+
+SELECT last_name FROM MY_EMPLOYEE;
+
+SELECT * FROM USER_TABLES;
+
