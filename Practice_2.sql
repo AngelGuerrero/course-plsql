@@ -127,3 +127,88 @@ SELECT
 FROM EMPLOYEES
 WHERE department_id = 30;
 
+
+-- Exercise 3. Create a procedure, ADD_EMPLOYEE, to insert a new employee into
+-- EMPLOYEES table. The procedure should call a VALID DEPT ID function to check
+-- whether the department ID specified for the new employee exists in the 
+-- DEPARTMENTS table.
+
+-- a. Create a function VALID_DEPTID to validate a specified department ID and
+-- return a BOOLEAN value of TRUE if the department exists.
+
+-- b. Create the ADD_EMPLOYEE procedure to add an employee to the EMPLOYEES
+-- table. The row should be added to the EMPLOYEES table if the VALID_DEPTID
+-- function returns TRUE; otherwise, alert the user with an appropiate message.
+-- Provide the following parameters (with defaults specified in parenthesis):
+-- first_name, last_name, email, job(SA_REP), mgr(145), sal(1000), comm(0),
+-- and deptid(30). Use the EMPLOYEES_SEQ sequence to set the employee_id column
+-- and set hire_date to TRUNC(SYSDATE).
+
+-- c. Call ADD_EMPLOYEE for the name Jane Harris in department 15, leaving other
+-- parameters with their default values. What is the result?
+
+-- d. Add another employee named Joe Harris in department 80, leaving remaining
+-- parameters with their default values. What is the result?
+
+
+-- Creating a function VALID_DEPTID
+CREATE OR REPLACE
+  FUNCTION VALID_DEPTID(dept DEPARTMENTS.department_id%TYPE DEFAULT NULL)
+  RETURN BOOLEAN
+  IS
+
+  deptname DEPARTMENTS.department_name%TYPE;
+  
+  BEGIN
+    -- If no data found throw a exception
+    SELECT department_name INTO deptname FROM DEPARTMENTS WHERE department_id = dept;
+    -- Just send true, because the exception block works...!
+    RETURN TRUE;    
+
+  EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        dbms_output.put_line('El departamento no existe');
+        RETURN FALSE;
+      WHEN TOO_MANY_ROWS THEN
+        dbms_output.put_line('Hay valores duplicados para este departamento');
+        RETURN TRUE;
+        
+END VALID_DEPTID;
+/
+
+CREATE OR REPLACE SEQUENCE EMPLOYEES_SEQ
+  MINVALUE 0
+  MAXVALUE 100000
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 10;
+
+CREATE OR REPLACE
+  PROCEDURE ADD_EMPLOYEE(
+    p_first_name EMPLOYEES.first_name%TYPE DEFAULT NULL,
+    p_last_name EMPLOYEES.last_name%TYPE DEFAULT NULL,
+    p_email EMPLOYEES.email%TYPE DEFAULT NULL,
+    p_job EMPLOYEES.job_id%TYPE DEFAULT NULL,
+    p_mgr EMPLOYEES.manager_id%TYPE DEFAULT NULL,
+    p_sal EMPLOYEES.salary%TYPE DEFAULT NULL,
+    p_commission EMPLOYEES.commission_pct%TYPE DEFAULT NULL,
+    p_hd EMPLOYEES.hire_date%TYPE DEFAULT NULL,
+    p_deptid EMPLOYEES.departmet_id%TYPE
+  ) IS
+
+  IF VALID_DEPTID(p_deptid) THEN
+    INSERT INTO EMPLOYEES VALUES (
+      EMPLOYEES_SEQ.NEXTVAL,
+      p_first_name,
+      p_last_name,
+      p_email,
+      p_job,
+      p_mgr,
+      p_sal,
+      p_commission,
+      p_hd,
+      p_deptid
+    );
+    COMMIT;
+    dbms_output.put_line('Registro agregado.');
+  END IF;
