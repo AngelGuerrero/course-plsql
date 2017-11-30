@@ -39,26 +39,31 @@
 -- a. Create and compile a function called GET_JOB to return a job_title.
 -- b. Create a VARCHAR2 host variable called TITLE, allowing a length of 35
 -- characters. Invoke the function with SA_REP job ID to return the value in the
--- host variable. Print the gost variable to view the result.
-CREATE OR REPLACE
-  FUNCTION GET_JOB (j_id JOBS.job_id%TYPE)
-  RETURN JOBS.job_title%TYPE 
-  IS
-  j_title JOBS.job_title%TYPE;
-  
+-- host variable. Print the host variable to view the result.
+
+-- Creating the GET_JOB function
+CREATE OR REPLACE 
+  FUNCTION GET_JOB(
+    j_id JOBS.job_id%TYPE,
+    paramout OUT JOBS.job_title%TYPE
+  )
+  RETURN JOBS.job_title%TYPE IS
   BEGIN
-  SELECT job_title INTO j_title FROM JOBS WHERE job_id = j_id;
-  
-  RETURN j_title;
-END GET_JOB;
+    SELECT job_title INTO paramout FROM JOBS WHERE job_id = j_id;
+
+    RETURN '';
+  END;
 /
 
-VARIABLE TITLE VARCHAR2(35);
-
-EXECUTE :TITLE := GET_JOB('SA_REP');
-
-EXECUTE dbms_output.put_line(:TITLE);
-
+-- Call the function
+DECLARE
+  retval JOBS.job_title%TYPE; -- It needs a variable for save the return value
+  TITLE VARCHAR2(35);
+BEGIN
+  retval := GET_JOB('SA_REP', TITLE);
+  dbms_output.put_line(TITLE);
+END;
+/
 
 
 -- Exercise 2. Create a function called GET_ANNUAL_COMP to return the annual
@@ -72,4 +77,53 @@ EXECUTE dbms_output.put_line(:TITLE);
 -- b. Use the function in a SELECT statement against the EMPLOYEES table for
 -- EMPLOYEES in department 30.
 
+CREATE OR REPLACE 
+  FUNCTION GET_ANNUAL_COMP(salary BINARY_DOUBLE DEFAULT NULL, commission_pct BINARY_DOUBLE DEFAULT 0)
+  RETURN BINARY_DOUBLE
+  IS
+    
+  err_num NUMBER;
+  err_msg VARCHAR2(255);
+  myresult BINARY_DOUBLE;
+  
+  BEGIN
+    CASE
+      WHEN salary IS NULL THEN
+        myresult := 0;
+      WHEN commission_pct IS NOT NULL THEN
+        myresult := (salary * 12) + (commission_pct * salary * 12);
+      ELSE 
+        myresult := (salary * 12);
+    END CASE;
+    
+    RETURN myresult;
+    
+  EXCEPTION
+    WHEN OTHERS THEN
+      dbms_output.put_line('Ha ocurrido un error al tratar de calcular el salario anual');
+      dbms_output.put_line('Error: ' || err_num);
+      dbms_output.put_line('Mensaje: ' || err_msg);
+  END;
+/
+
+SELECT 
+  employee_id, 
+  last_name, 
+  GET_ANNUAL_COMP(salary, commission_pct) "Annual Compensation"
+FROM EMPLOYEES
+WHERE department_id = 30;
+
+SELECT 
+  employee_id, 
+  last_name, 
+  GET_ANNUAL_COMP(salary) "Annual Compensation"
+FROM EMPLOYEES
+WHERE department_id = 30;
+
+SELECT 
+  employee_id, 
+  last_name, 
+  GET_ANNUAL_COMP() "Annual Compensation"
+FROM EMPLOYEES
+WHERE department_id = 30;
 

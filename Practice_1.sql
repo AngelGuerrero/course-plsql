@@ -210,19 +210,23 @@ SELECT * FROM JOBS;
 -- why?
 
 CREATE OR REPLACE
-  PROCEDURE GET_EMPLOYEE(emp_id EMPLOYEES.employee_id%TYPE DEFAULT NULL) IS
-  
-  e_job_id EMPLOYEES.job_id%TYPE;
-  e_salary EMPLOYEES.salary%TYPE;
+  PROCEDURE GET_EMPLOYEE(
+    emp_id IN EMPLOYEES.employee_id%TYPE DEFAULT NULL,
+    inout_emp_sal OUT EMPLOYEES.salary%TYPE,
+    inout_emp_job_id OUT EMPLOYEES.job_id%TYPE) IS
 
   err_num NUMBER;
   err_msg VARCHAR2(255);
 
   BEGIN
     IF (emp_id IS NOT NULL) THEN
-      SELECT job_id, salary INTO e_job_id, e_salary FROM EMPLOYEES WHERE employee_id = emp_id;
+      SELECT 
+        job_id, salary INTO inout_emp_job_id, inout_emp_sal
+      FROM EMPLOYEES 
+      WHERE employee_id = emp_id;
+      
       dbms_output.put_line('Empleado: ' || emp_id);
-      dbms_output.put_line('Salario: ' || e_salary || ' job_id: ' || e_job_id);
+      
     ELSE
       dbms_output.put_line('No se ha ingresado ningún parámetro');
     END IF;
@@ -241,10 +245,16 @@ CREATE OR REPLACE
   END GET_EMPLOYEE;
 /
 
-EXECUTE GET_EMPLOYEE(120);
 
-EXECUTE GET_EMPLOYEE(300);
-
-
-
+DECLARE
+  sal EMPLOYEES.salary%TYPE;
+  jobid EMPLOYEES.job_id%TYPE;
+BEGIN
+  GET_EMPLOYEE(120, sal, jobid);
+  dbms_output.put_line('Salario: ' || sal || ' job_id: ' || jobid);
+  dbms_output.put_line('------------------------------');
+  
+  GET_EMPLOYEE(300, sal, jobid);
+END;
+/
 
