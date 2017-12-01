@@ -158,12 +158,12 @@ CREATE OR REPLACE
   IS
 
   deptname DEPARTMENTS.department_name%TYPE;
-  
+
   BEGIN
     -- If no data found throw a exception
     SELECT department_name INTO deptname FROM DEPARTMENTS WHERE department_id = dept;
     -- Just send true, because the exception block works...!
-    RETURN TRUE;    
+    RETURN TRUE;
 
   EXCEPTION
       WHEN NO_DATA_FOUND THEN
@@ -172,43 +172,83 @@ CREATE OR REPLACE
       WHEN TOO_MANY_ROWS THEN
         dbms_output.put_line('Hay valores duplicados para este departamento');
         RETURN TRUE;
-        
+
 END VALID_DEPTID;
 /
 
-CREATE OR REPLACE SEQUENCE EMPLOYEES_SEQ
+-- Creating the sequence EMPLOYEES_SEQ
+CREATE SEQUENCE EMPLOYEES_SEQ
   MINVALUE 0
   MAXVALUE 100000
   START WITH 1
   INCREMENT BY 1
-  CACHE 10;
+  NOCACHE
+  NOCYCLE;
 
+-- Creating the procedure for add a new employee
 CREATE OR REPLACE
   PROCEDURE ADD_EMPLOYEE(
-    p_first_name EMPLOYEES.first_name%TYPE DEFAULT NULL,
-    p_last_name EMPLOYEES.last_name%TYPE DEFAULT NULL,
-    p_email EMPLOYEES.email%TYPE DEFAULT NULL,
-    p_job EMPLOYEES.job_id%TYPE DEFAULT NULL,
-    p_mgr EMPLOYEES.manager_id%TYPE DEFAULT NULL,
-    p_sal EMPLOYEES.salary%TYPE DEFAULT NULL,
-    p_commission EMPLOYEES.commission_pct%TYPE DEFAULT NULL,
-    p_hd EMPLOYEES.hire_date%TYPE DEFAULT NULL,
-    p_deptid EMPLOYEES.departmet_id%TYPE
+    p_first_name EMPLOYEES.first_name%TYPE DEFAULT '',
+    p_last_name EMPLOYEES.last_name%TYPE DEFAULT '',
+    p_deptid EMPLOYEES.department_id%TYPE DEFAULT 30,
+    p_email EMPLOYEES.email%TYPE DEFAULT '',
+    p_job EMPLOYEES.job_id%TYPE DEFAULT 'SA_REP',
+    p_mgr EMPLOYEES.manager_id%TYPE DEFAULT 145,
+    p_sal EMPLOYEES.salary%TYPE DEFAULT 1000,
+    p_commission EMPLOYEES.commission_pct%TYPE DEFAULT 0,
+    p_hd EMPLOYEES.hire_date%TYPE DEFAULT TRUNC(SYSDATE)
   ) IS
 
-  IF VALID_DEPTID(p_deptid) THEN
-    INSERT INTO EMPLOYEES VALUES (
-      EMPLOYEES_SEQ.NEXTVAL,
-      p_first_name,
-      p_last_name,
-      p_email,
-      p_job,
-      p_mgr,
-      p_sal,
-      p_commission,
-      p_hd,
-      p_deptid
-    );
-    COMMIT;
-    dbms_output.put_line('Registro agregado.');
-  END IF;
+  err_num NUMBER;
+  err_msg VARCHAR2(255);
+
+  BEGIN
+    IF VALID_DEPTID(p_deptid) THEN
+      INSERT INTO EMPLOYEES (
+        EMPLOYEE_ID,
+        FIRST_NAME,
+        LAST_NAME,
+        EMAIL,
+        JOB_ID,
+        MANAGER_ID,
+        SALARY,
+        COMMISSION_PCT,
+        HIRE_DATE,
+        DEPARTMENT_ID
+      )
+      VALUES (
+        ( (SELECT MAX(employee_id) FROM EMPLOYEES) + EMPLOYEES_SEQ.NEXTVAL ),
+        p_first_name,
+        p_last_name,
+        CONCAT(SUBSTR(p_first_name, 1, 1), SUBSTR(p_last_name, 2)),
+        p_job,
+        p_mgr,
+        p_sal,
+        p_commission,
+        p_hd,
+        p_deptid
+      );
+      COMMIT;
+      dbms_output.put_line('--------------------------');
+      dbms_output.put_line('Registro agregado.');
+      dbms_output.put_line('Datos.');
+      dbms_output.put_line('Nombre: ' || p_first_name || ', Apellido: ' || p_last_name);
+      dbms_output.put_line('Correo: ' || p_email || ', Job_id: ' || p_job);
+      dbms_output.put_line('Manager: ' || p_mgr || ', Salario: ' || p_sal);
+      dbms_output.put_line('Comisión: ' || p_commission || 'Fecha de contratación: ' || p_hd);
+      dbms_output.put_line('Departamento: ' || p_deptid);
+      dbms_output.put_line('');
+    ELSE
+      dbms_output.put_line('El departamento: ' || p_deptid ||' que se intenta ingresar no es válido');
+      dbms_output.put_line('');
+    END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      err_num := SQLCODE;
+      err_msg := SQLERRM;
+      dbms_output.put_line('Ha ocurrido un error al tratar de ingresar el registro.');
+      dbms_output.put_line('Error: ' || err_num);
+      dbms_output.put_line('Mensaje: ' || err_msg);
+END ADD_EMPLOYEE;
+/
