@@ -105,14 +105,16 @@ CREATE OR REPLACE
       dbms_output.put_line('Mensaje: ' || err_msg);
   END;
 /
-
+  
+-- Calling function with two parameters
 SELECT 
   employee_id, 
   last_name, 
-  GET_ANNUAL_COMP(salary, commission_pct) "Annual Compensation"
+  TRUNC(GET_ANNUAL_COMP(salary, commission_pct), 0) "Annual Compensation"
 FROM EMPLOYEES
 WHERE department_id = 30;
 
+-- Calling function with one parameter
 SELECT 
   employee_id, 
   last_name, 
@@ -120,6 +122,7 @@ SELECT
 FROM EMPLOYEES
 WHERE department_id = 30;
 
+-- Calling function with zero parameters
 SELECT 
   employee_id, 
   last_name, 
@@ -176,6 +179,7 @@ CREATE OR REPLACE
 END VALID_DEPTID;
 /
 
+
 -- Creating the sequence EMPLOYEES_SEQ
 CREATE SEQUENCE EMPLOYEES_SEQ
   MINVALUE 0
@@ -184,6 +188,8 @@ CREATE SEQUENCE EMPLOYEES_SEQ
   INCREMENT BY 1
   NOCACHE
   NOCYCLE;
+
+DROP SEQUENCE EMPLOYEES_SEQ;
 
 -- Creating the procedure for add a new employee
 CREATE OR REPLACE
@@ -244,11 +250,30 @@ CREATE OR REPLACE
     END IF;
 
   EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+      err_num := SQLCODE;
+      err_msg := SQLERRM;
+      dbms_output.put_line('El registro que se intenta agregar, ya está en la base de datos');
+      dbms_output.put_line('Código de error: ' || err_num);
+      dbms_output.put_line('Mensaje: ' || err_msg);
     WHEN OTHERS THEN
       err_num := SQLCODE;
       err_msg := SQLERRM;
       dbms_output.put_line('Ha ocurrido un error al tratar de ingresar el registro.');
-      dbms_output.put_line('Error: ' || err_num);
+      dbms_output.put_line('Código de error: ' || err_num);
       dbms_output.put_line('Mensaje: ' || err_msg);
 END ADD_EMPLOYEE;
 /
+
+
+-- Adding: Jane Harris in department: 15  <- Error, el departamento 15 no existe.
+EXECUTE ADD_EMPLOYEE('Jane', 'Harris', 15);
+
+-- Adding: Joe Harris in department: 80 <- Throws an error if the user is in the database
+EXECUTE ADD_EMPLOYEE('Joe', 'Harris', 80);
+
+SELECT * FROM EMPLOYEES WHERE department_id = 80 ORDER BY 1 DESC;
+
+
+
+
