@@ -42,11 +42,7 @@
 -- host variable. Print the host variable to view the result.
 
 -- Creating the GET_JOB function
-CREATE OR REPLACE 
-  FUNCTION GET_JOB(
-    j_id JOBS.job_id%TYPE,
-    paramout OUT JOBS.job_title%TYPE
-  )
+CREATE OR REPLACE FUNCTION GET_JOB(j_id JOBS.job_id%TYPE, paramout OUT JOBS.job_title%TYPE)
   RETURN JOBS.job_title%TYPE IS
   BEGIN
     SELECT job_title INTO paramout FROM JOBS WHERE job_id = j_id;
@@ -178,6 +174,8 @@ CREATE OR REPLACE
 
 END VALID_DEPTID;
 /
+
+DESCRIBE JOBS;
 
 
 -- Creating the sequence EMPLOYEES_SEQ
