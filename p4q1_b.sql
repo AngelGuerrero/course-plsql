@@ -2,15 +2,15 @@
 
 CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
 
-  -- || VARIABLES ||
   err_num NUMBER;
   err_msg VARCHAR2(255);
   
-  -- || PRIVATE FUNCTIONS ||
-  
-  FUNCTION VALID_DEPTID(dept DEPARTMENTS.department_id%TYPE DEFAULT NULL) RETURN BOOLEAN;
 
-  -- || BODY PROCEDURES ||
+  FUNCTION VALID_DEPTID(dept DEPARTMENTS.department_id%TYPE DEFAULT NULL) RETURN BOOLEAN;
+  
+
+--------------------------------------------------------------------------------
+
 
   -- << Add a new employee with optional parameters >> --
   PROCEDURE ADD_EMPLOYEE(
@@ -23,7 +23,8 @@ CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
     p_sal EMPLOYEES.salary%TYPE DEFAULT 1000,
     p_commission EMPLOYEES.commission_pct%TYPE DEFAULT 0,
     p_hd EMPLOYEES.hire_date%TYPE DEFAULT TRUNC(SYSDATE)
-  ) IS
+  ) 
+  IS
   -- Variables
   employees_seq EMPLOYEES.EMPLOYEE_ID%TYPE;
   BEGIN
@@ -95,7 +96,8 @@ CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
                           p_deptid EMPLOYEES.department_id%TYPE,
                           p_first_name EMPLOYEES.first_name%TYPE,
                           p_last_name EMPLOYEES.last_name%TYPE
-                        ) IS
+                        ) 
+  IS
     custom_email EMPLOYEES.EMAIL%TYPE;
   BEGIN
     custom_email := UPPER(CONCAT(SUBSTR(p_first_name, 1, 1), SUBSTR(p_last_name, 1, 7)));
@@ -103,6 +105,7 @@ CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
     ADD_EMPLOYEE(p_first_name, p_last_name, p_deptid, custom_email);
     
     dbms_output.put_line(custom_email);
+  
   END ADD_EMPLOYEE;
 
 
@@ -111,7 +114,8 @@ CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
                          emp_id IN EMPLOYEES.employee_id%TYPE DEFAULT NULL,
                          inout_emp_sal OUT EMPLOYEES.salary%TYPE,
                          inout_emp_job_id OUT EMPLOYEES.job_id%TYPE
-                         ) IS
+                         ) 
+  IS
   BEGIN
     IF (emp_id IS NOT NULL) THEN
       SELECT 
@@ -135,11 +139,66 @@ CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
       dbms_output.put_line('Error: ' || err_num);
       dbms_output.put_line(err_msg);
   END GET_EMPLOYEE;
+  
+  
+  -- << GET_EMPLOYEE Function emp_id >> --
+  FUNCTION GET_EMPLOYEE(emp_id IN EMPLOYEES.employee_id%TYPE) RETURN EMPLOYEES%ROWTYPE 
+  IS
+    retval EMPLOYEES%ROWTYPE;
+  BEGIN
+
+    SELECT * INTO retval FROM EMPLOYEES WHERE employee_id = emp_id;
+
+    RETURN retval;
+    
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      dbms_output.put_line('No se han encontrado registros con el identificador: ' || emp_id);
+      RETURN NULL;
+
+  END GET_EMPLOYEE;
+  
+  
+  -- << GET_EMPLOYEE Function family_name >> --
+  FUNCTION GET_EMPLOYEE(family_name IN EMPLOYEES.last_name%TYPE) RETURN EMPLOYEES%ROWTYPE
+  IS
+    retval EMPLOYEES%ROWTYPE;
+  BEGIN
+    
+    SELECT * INTO retval FROM EMPLOYEES WHERE last_name = family_name;
+    
+    RETURN retval;
+  
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      dbms_output.put_line('No se han encontrado registros con el nombre de familia: ' || family_name);
+    
+  END GET_EMPLOYEE;
+  
+    
+  -- UTILITY FUNCTION PRINT_EMPLOYEE
+  FUNCTION PRINT_EMPLOYEE(employee IN EMPLOYEES%ROWTYPE) RETURN varchar2 
+  IS
+  BEGIN
+    IF employee.employee_id IS NULL THEN
+      dbms_output.put_line('El objeto empleado que se ha mandado como parámetro está vacío');
+    ELSE
+      dbms_output.put_line('--------------------------');
+      dbms_output.put_line('El id del departamento es: ' || employee.department_id);
+      dbms_output.put_line('El id del empleado es: ' || employee.employee_id);
+      dbms_output.put_line('El primer nombre del empleado es: ' || employee.first_name);
+      dbms_output.put_line('El apellido del empleado es: ' || employee.last_name);
+      dbms_output.put_line('El job id del empleado es: ' || employee.job_id);
+      dbms_output.put_line('El salario del empleado es: ' || employee.salary);
+    END IF;
+    
+    RETURN '';
+     
+  END PRINT_EMPLOYEE;
 
 
   -- << Valid department id >> --
-  FUNCTION VALID_DEPTID(dept DEPARTMENTS.department_id%TYPE DEFAULT NULL)
-  RETURN BOOLEAN
+  FUNCTION VALID_DEPTID(dept DEPARTMENTS.department_id%TYPE DEFAULT NULL) RETURN BOOLEAN
   IS
   deptname DEPARTMENTS.department_name%TYPE;
   BEGIN
@@ -155,6 +214,7 @@ CREATE OR REPLACE PACKAGE BODY EMP_PKG IS
         dbms_output.put_line('Hay valores duplicados para este departamento');
         RETURN TRUE;
   END VALID_DEPTID;
+
   
 END EMP_PKG;
 /

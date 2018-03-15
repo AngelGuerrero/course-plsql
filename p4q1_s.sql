@@ -2,19 +2,14 @@
 
 CREATE OR REPLACE PACKAGE EMP_PKG IS
 
-  -- PUBLIC PROCEDURES
+  -- PUBLIC PROCEDURES AND FUNCTIONS
 
   PROCEDURE GET_EMPLOYEE(
                           emp_id IN EMPLOYEES.employee_id%TYPE DEFAULT NULL,
                           inout_emp_sal OUT EMPLOYEES.salary%TYPE,
                           inout_emp_job_id OUT EMPLOYEES.job_id%TYPE
                          );
-                         
-  FUNCTION GET_EMPLOYEE(emp_id IN EMPLOYEES.employee_id%TYPE) 
-    RETURN EMPLOYEES%ROWTYPE;
-  
-  FUNCTION GET_EMPLOYEE(family_name IN EMPLOYEES.last_name%TYPE) 
-    RETURN EMPLOYEES%ROWTYPE;
+
 
   PROCEDURE ADD_EMPLOYEE(
                           p_first_name EMPLOYEES.first_name%TYPE DEFAULT '',
@@ -27,13 +22,25 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
                           p_commission EMPLOYEES.commission_pct%TYPE DEFAULT 0,
                           p_hd EMPLOYEES.hire_date%TYPE DEFAULT TRUNC(SYSDATE)
                          );
-  
+                         
+                         
   -- Practice 4. -> a        
   PROCEDURE ADD_EMPLOYEE(
                           p_deptid EMPLOYEES.department_id%TYPE,
                           p_first_name EMPLOYEES.first_name%TYPE,
                           p_last_name EMPLOYEES.last_name%TYPE
                         );
+    
+  FUNCTION GET_EMPLOYEE(emp_id IN EMPLOYEES.employee_id%TYPE) 
+    RETURN EMPLOYEES%ROWTYPE;
+
+
+  FUNCTION GET_EMPLOYEE(family_name IN EMPLOYEES.last_name%TYPE) 
+    RETURN EMPLOYEES%ROWTYPE;
+    
+    
+  FUNCTION PRINT_EMPLOYEE(employee IN EMPLOYEES%ROWTYPE) 
+    RETURN varchar2;
     
 END EMP_PKG;
 /
