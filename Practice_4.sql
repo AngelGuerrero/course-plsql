@@ -77,3 +77,14 @@ END;
 -- c. In the body, create an initialization block that calls the
 -- INIT_DEPARTMENTS procedure to initialize the table. Save and compile the
 -- changes.
+
+
+
+EXECUTE MYTEST_PKG.INIT_DEPARTMENTS;
+
+DESCRIBE valid_departments;
+
+DESCRIBE DEPARTMENTS;
+
+
+
