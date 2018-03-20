@@ -79,12 +79,4 @@ END;
 -- changes.
 
 
-
 EXECUTE MYTEST_PKG.INIT_DEPARTMENTS;
-
-DESCRIBE valid_departments;
-
-DESCRIBE DEPARTMENTS;
-
-
-
