@@ -78,5 +78,5 @@ END;
 -- INIT_DEPARTMENTS procedure to initialize the table. Save and compile the
 -- changes.
 
+EXECUTE EMP_PKG.INIT_DEPTS;
 
-EXECUTE MYTEST_PKG.INIT_DEPARTMENTS;
