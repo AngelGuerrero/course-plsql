@@ -5,7 +5,7 @@
    Designer: Luis Ángel De Santiago Guerrero
    Developer: Luis Ángel De Santiago Guerrero
    Version: 1.0
-   Description: Paquete para el manejo de datos en la tabla EMPLOYEES
+   Description: Paquete para el manejo de datos en la tabla employees
 /*============================================================================*/
 
 
@@ -17,7 +17,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
    /*===============================================================+
       PROCEDURE:    add_employee
-      DESCRIPTION:  Agrega un empleado en la tabla EMPLOYEES con argumentos por defecto
+      DESCRIPTION:  Agrega un empleado en la tabla employees con argumentos por defecto
       ARGUMENTS:
                   IN p_first_name Recibe el primer nombre del empleado.
                      p_last_name Recibe el apellido o apellidos del empleado.
@@ -40,15 +40,15 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
       1.0         21/03/2018   Ángel Guerrero.           1. Creación del procedimiento.
    +================================================================*/
    PROCEDURE add_employee(
-                          p_first_name IN EMPLOYEES.first_name%TYPE DEFAULT '',
-                          p_last_name IN EMPLOYEES.last_name%TYPE DEFAULT '',
-                          p_deptid IN EMPLOYEES.department_id%TYPE DEFAULT 30,
-                          p_email IN EMPLOYEES.email%TYPE DEFAULT '',
-                          p_job IN EMPLOYEES.job_id%TYPE DEFAULT 'SA_REP',
-                          p_mgr IN EMPLOYEES.manager_id%TYPE DEFAULT 145,
-                          p_sal IN EMPLOYEES.salary%TYPE DEFAULT 1000,
-                          p_commission IN EMPLOYEES.commission_pct%TYPE DEFAULT 0,
-                          p_hd IN EMPLOYEES.hire_date%TYPE DEFAULT TRUNC(SYSDATE)
+                          p_first_name IN employees.first_name%TYPE DEFAULT '',
+                          p_last_name IN employees.last_name%TYPE DEFAULT '',
+                          p_deptid IN employees.department_id%TYPE DEFAULT 30,
+                          p_email IN employees.email%TYPE DEFAULT '',
+                          p_job IN employees.job_id%TYPE DEFAULT 'SA_REP',
+                          p_mgr IN employees.manager_id%TYPE DEFAULT 145,
+                          p_sal IN employees.salary%TYPE DEFAULT 1000,
+                          p_commission IN employees.commission_pct%TYPE DEFAULT 0,
+                          p_hd IN employees.hire_date%TYPE DEFAULT TRUNC(SYSDATE)
                          );
 
 
@@ -75,9 +75,9 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
       1.0         21/03/2018   Ángel Guerrero.           1. Creación de procedimiento.
    +================================================================*/
    PROCEDURE add_employee(
-                          p_deptid IN EMPLOYEES.department_id%TYPE,
-                          p_first_name IN EMPLOYEES.first_name%TYPE,
-                          p_last_name IN EMPLOYEES.last_name%TYPE
+                          p_deptid IN employees.department_id%TYPE,
+                          p_first_name IN employees.first_name%TYPE,
+                          p_last_name IN employees.last_name%TYPE
                         );
 
 
@@ -88,8 +88,8 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
                   IN p_emp_id Recibe el identificador del empleado a buscar
                               dentro del procedimiento.
 
-                  OUT p_x_emp_sal Almacena el salario del empleado a buscar.
-                      p_x_emp_job_id Almacena el puesto del empleado a buscar.
+                  OUT x_emp_sal Almacena el salario del empleado a buscar.
+                      x_emp_job_id Almacena el puesto del empleado a buscar.
 
       RETURNS:      N/A
       NOTES:
@@ -99,9 +99,9 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
       1.0         21/03/2018   Ángel Guerrero.           1. Creación del procedimiento
    +================================================================*/
    PROCEDURE get_employee(
-                          p_emp_id IN EMPLOYEES.employee_id%TYPE DEFAULT NULL,
-                          p_x_emp_sal OUT EMPLOYEES.salary%TYPE,
-                          p_x_emp_job_id OUT EMPLOYEES.job_id%TYPE
+                          p_emp_id IN employees.employee_id%TYPE DEFAULT NULL,
+                          x_emp_sal OUT employees.salary%TYPE,
+                          x_emp_job_id OUT employees.job_id%TYPE
                          );
 
 
@@ -110,20 +110,20 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
       DESCRIPTION:  Obtiene un empleado según el identificador del empleado.
       ARGUMENTS:
                   IN p_emp_id Almacena un valor de tipo employee_id de la tabla
-                            EMPLOYEES.
+                            employees.
 
 
                   OUT
 
-      RETURNS:      EMPLOYEES%ROWTYPE
+      RETURNS:      employees%ROWTYPE
       NOTES:
 
       HISTORY
       Version     Date         Author                    Change Reference
       1.0         21/03/2018   Ángel Guerrero.           1. Creación de la función.
    +================================================================*/
-   FUNCTION get_employee(p_emp_id IN EMPLOYEES.employee_id%TYPE)
-      RETURN EMPLOYEES%ROWTYPE;
+   FUNCTION get_employee(p_emp_id IN employees.employee_id%TYPE)
+      RETURN employees%ROWTYPE;
 
 
    /*===============================================================+
@@ -134,22 +134,22 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
                   OUT
 
-      RETURNS:      EMPLOYEES%ROWTYPE
+      RETURNS:      employees%ROWTYPE
       NOTES:
 
       HISTORY
       Version     Date         Author                    Change Reference
       1.0         21/03/2018   Ángel Guerrero.           1. Creación de la función.
    +================================================================*/
-   FUNCTION get_employee(p_family_name IN EMPLOYEES.last_name%TYPE)
-      RETURN EMPLOYEES%ROWTYPE;
+   FUNCTION get_employee(p_family_name IN employees.last_name%TYPE)
+      RETURN employees%ROWTYPE;
 
 
    /*===============================================================+
       FUNCTION:    print_employee
       DESCRIPTION:  Imprime los datos de un empleado.
       ARGUMENTS:
-                  IN p_employee Recibe un empleado de tipo EMPLOYEES.
+                  IN p_employee Recibe un empleado de tipo employees.
 
                   OUT
 
@@ -160,8 +160,8 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
       Version     Date         Author                    Change Reference
       1.0         21/03/2018   Ángel Guerrero.           1. Creación de la función.
    +================================================================*/
-   FUNCTION print_employee(p_employee IN EMPLOYEES%ROWTYPE)
-      RETURN varchar2;
+   FUNCTION print_employee(p_employee IN employees%ROWTYPE)
+      RETURN VARCHAR2;
 
 
    /*===============================================================+
