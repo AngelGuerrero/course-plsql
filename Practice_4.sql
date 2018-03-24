@@ -80,3 +80,57 @@ END;
 
 EXECUTE EMP_PKG.INIT_DEPTS;
 
+
+-- 4. Change VALID_DEPTID validation processing to use the private PL/SQL table
+-- of deparment ID values. Save and compile the changes.
+
+-- a. Modify VALID_DEPTID to perform its validation by using the PLSQL table of
+-- department Id values. Save and compile the changes.
+
+-- b. Test your code by calling ADD_EMPLOYEE using the name James Bond in
+-- department 15. What happens?
+
+-- c. Insert a new department with ID 15 and name Security, and commit the changes.
+
+-- d. Test your code again, by calling ADD_EMPLOYEE using the name James Bond
+-- in department 15. What happens?
+
+
+EXECUTE EMP_PKG.ADD_EMPLOYEE('James', 'Bond', 15);
+
+-- Si la tabla valid_departments aún no está creada manda un mensaje que la tabla
+-- valid_departments no está creada. Se tienen que inicializar la tabla de departamentos.
+
+EXECUTE EMP_PKG.INIT_DEPTS;
+EXECUTE EMP_PKG.ADD_EMPLOYEE('James', 'Bond', 15);
+
+-- El resultado de esta función muestra un mensaje que no se ha encontrado el
+-- dato 15 en la tabla valid_departments si la tabla está creada e inicializada.
+
+-- e. execute the EMP_PKG.INIT_DEPARTMENTS procedure to update the internal PLSQL
+-- table with the latest department data.
+
+-- f. Test your code by calling ADD_EMPLOYEE using the employee name James Bond
+-- who works in department 15, what happens?
+
+-- g. Delete employee James Bond and department 15 from their respective tables,
+-- commit the changes, and refresh the department data by invoking the
+-- EMP_PKG.INIT_DEPARTMENTS procedure.
+
+-- 5. Reorganize the subprogram in the package specification and the body so that
+-- they are in aplhabetical sequence.
+
+-- 6. Wrap the EMP_PKG package body and re-create it.
+-- a. Query the data dictionary to view the source for the EMP_PKG body.
+
+-- b. Start a command window and execute the WRAP command-line utility to wrap
+-- the body of the EMP_PKG package. Give the output file name a .plb extension.
+-- Hint: Copy the file (wich you saved in step 5c) containing the package body
+-- to a file called emp_pkg_b.sql
+
+-- c. Using iSQL*Plus, load and execute the .plb file containing the wrapped
+-- source.
+
+-- d. Query the data dictionary to display the source for the EMP_PKG package
+-- body again. Are the original code lines readable?
+

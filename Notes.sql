@@ -36,3 +36,7 @@ SELECT *
   ORDER BY LINE;
 
 SELECT * FROM DBA_OBJECTS WHERE OWNER = 'ORA01';
+
+
+-- Otorgar permisos para debug al usuario
+GRANT DEBUG CONNECT SESSION TO ORA01;
