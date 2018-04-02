@@ -24,7 +24,7 @@ BEGIN
 
       dbms_output.put_line('Dato ingresado en la tabla correctamente');
    ELSE
-      dbms_output.put_line('La secuncia no est· creada');
+      dbms_output.put_line('La secuncia no est√° creada');
 
       dbms_output.put_line('Creando secuencia.');
 
@@ -35,7 +35,7 @@ BEGIN
    END IF;
 EXCEPTION
    WHEN OTHERS THEN
-      dbms_output.put_line('Ha ocurrido un error en la ejecuciÛn de administraciÛn de jobs');
+      dbms_output.put_line('Ha ocurrido un error en la ejecuci√≥n de administraci√≥n de jobs');
       dbms_output.put_line('Error: ' || SQLCODE);
       dbms_output.put_line('Mensaje: ' || sqlerrm);
 END;
@@ -97,7 +97,7 @@ BEGIN
     END IF;
 EXCEPTION
    WHEN OTHERS THEN
-      dbms_output.put_line('Ha ocurrido un error en la ejecuciÛn de administraciÛn de jobs');
+      dbms_output.put_line('Ha ocurrido un error en la ejecuci√≥n de administraci√≥n de jobs');
       dbms_output.put_line('Error: ' || SQLCODE);
       dbms_output.put_line('Mensaje: ' || sqlerrm);
 END;
@@ -135,7 +135,7 @@ CREATE OR REPLACE DIRECTORY temp_path AS 'C:\temp';
 
 CREATE OR REPLACE PROCEDURE employee_report(p_dir_name IN VARCHAR2, 
                                             p_filename IN VARCHAR2) IS
-   l_file utl_file.file_type;
+   l_file UTL_FILE.FILE_TYPE;
    l_catchval BOOLEAN;
    l_employee employees%rowtype;
 BEGIN
@@ -180,7 +180,7 @@ BEGIN
 EXCEPTION
    WHEN OTHERS THEN
    dbms_output.put_line('Ha ocurrido un error al tratar de generar el reportee solicitado.');
-   dbms_output.put_line('C?digo de error: ' || SQLCODE);
+   dbms_output.put_line('CÛdigo de error: ' || SQLCODE);
    dbms_output.put_line('Mensaje: ' || sqlerrm);
 END EMPLOYEE_REPORT;
 /
@@ -193,7 +193,7 @@ SELECT last_name, salary, department_id FROM employees WHERE department_id = &de
 -- 2. Create a new procedure called WEB_EMPLOYEE_REPORT that generates the same
 -- data as the EMPLOYEE_REPORT.
 
---a. First, execute SET SERVEROUTPUT ON, and then execute
+--a. First, execute ESET SERVEROUTPUT ON, and then execute
 --htp.print('helo') followeb by executing OWA_UTIL.SHOWPAGE.
 --The exception messages genrated can be ignored.
 --
@@ -207,96 +207,11 @@ SELECT last_name, salary, department_id FROM employees WHERE department_id = &de
 --
 --c. Execute the procedure using iSQLPlus to generate the HTML data into a server
 --buffer, and execute the OWA_UTIL.SHOWPAGE procedure to display contents of the
---buffer. Remember that SERVEROUTPUT should be ON before you execute the code.
+--buffer. Remember that SERVEROUTPUT should be ON before yyou execute the code.
 --
 --d. Create an HTML file called web_employee_report.html containing the output
 --result text that you select and copy from the opening <HTML> tag to the
 --closing </HTML> tag. Paste the copied text into the file and save it to disk.
 --Double-click the file to display the results in your default browser.
 
-CREATE OR REPLACE PROCEDURE web_employee_report(p_dir_name IN VARCHAR2,
-                                                p_filename IN VARCHAR2) IS
-   l_file utl_file.file_type;
-   l_catchval BOOLEAN;
-BEGIN
-   l_catchval := utl_file.is_open(l_file);
-   
-   IF l_catchval
-   THEN
-      dbms_output.put_line('No se puede escribir en el archivo ahora mismo');
-   ELSE
-      dbms_output.put_line('Genrando el reporte web');
-      l_file := utl_file.fopen(upper(p_dir_name), p_filename, 'w');
-      utl_file.put(l_file, htp.htmlopen);
-      utl_file.fclose(l_file);
-   END IF;
-END web_employee_report;
-/
 
-EXECUTE web_employee_report('my_test_path', 'report.html');
-
-
-CREATE OR REPLACE PROCEDURE hello_html AS
-BEGIN
-  owa_util.mime_header('text/html');
-  
-  htp.htmlOpen;
-  htp.headOpen;
-  htp.title('Title of the HTML File');
-  htp.headClose;
-  
-  htp.bodyOpen( cattributes => 'TEXT="#000000" BGCOLOR="#FFFFFF"');
-  htp.header(1, 'Heading in the HTML File');
-  htp.para;
-  htp.print('Some text in the HTML file.');
-  htp.bodyClose;
-  
-  htp.htmlClose;
-END;
-/
-
-EXEC OWA_UTIL.SHOWPAGE;
-
-EXECUTE hello_html;
-
-
-create or replace procedure dump_page(p_dir in varchar2,
-                                      p_fname in varchar2 )
-is
-  l_thePage htp.htbuf_arr;
-  l_output utl_file.file_type;
-  l_lines number default 99999999;
-begin
-  l_output := utl_file.fopen(upper(p_dir), p_fname, 'w' );
-
-  owa.get_page(l_thePage, l_lines );
-
-  for i in 1 .. l_lines loop
-    utl_file.put(l_output, l_thePage(i));
-  end loop;
-
-  utl_file.fclose( l_output );
-end dump_page;
-/
-
-create or replace procedure pretend_this_is_a_webdb_proc
-as
-begin
-  htp.p( 'This is a webdb procedure, trust me' );
-  htp.p( 'The end' );
-end;
-/
-
-declare
-  nm owa.vc_arr;
-  vl owa.vc_arr;
-begin
-  nm(1) := 'SERVER_PORT';
-  vl(1) := '80';
-  owa.init_cgi_env( 1, nm, vl );
-  
-  
-  pretend_this_is_a_webdb_proc;
-  dump_page( 'temp_path', 'index.html' );
-end; 
-/
