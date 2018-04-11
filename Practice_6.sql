@@ -27,6 +27,8 @@ SELECT dbms_metadata.get_xml('TABLE', 'EMPLOYEES', 'HR') FROM dual;
 
 SELECT dbms_metadata.get_dependent_ddl('OBJECT_GRANT', 'EMPLOYEES', 'HR') FROM dual;
 
+SELECT dbms_metadata.get_ddl('TABLE', 'EMPLOYEES') FROM dual;
+
 SELECT dbms_metadata.get_granted_ddl('SYSTEM_GRANT', 'HR') FROM dual;
 
 DECLARE
@@ -164,12 +166,16 @@ BEGIN compile_pkg.make('emp_data'); END;
 -- (if required). Cut and paste the results into the SQLPlus buffer and execute the
 -- statement.
 
+BEGIN compile_pkg.regenerate('EMPLOYEES'); END;
+/
 
+BEGIN compile_pkg.regenerate('TABLE_PKG'); END;
+/
 
-
-
-
-
+SELECT object_name
+  FROM all_objects
+ WHERE object_name = upper('table_pkg')
+   AND rownum <= 1;
 
 
 

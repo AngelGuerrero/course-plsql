@@ -211,6 +211,6 @@ CREATE OR REPLACE PACKAGE BODY TABLE_PKG IS
         dbms_output.put_line('Ha ocurrido un error al buscar un registro');
         dbms_output.put_line('Error: ' || SQLCODE);
         dbms_output.put_line('Error del mensaje: ' || sqlerrm);
-  END row_exists;
+  END row_exists;  
   
 END TABLE_PKG;
