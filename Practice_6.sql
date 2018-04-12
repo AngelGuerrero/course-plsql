@@ -172,14 +172,8 @@ BEGIN compile_pkg.regenerate('EMPLOYEES'); END;
 BEGIN compile_pkg.regenerate('TABLE_PKG'); END;
 /
 
-SELECT object_name
-  FROM all_objects
- WHERE object_name = upper('table_pkg')
-   AND rownum <= 1;
-
-
-
-
+BEGIN compile_pkg.regenerate('EMP_PKG'); END;
+/
 
 
 
