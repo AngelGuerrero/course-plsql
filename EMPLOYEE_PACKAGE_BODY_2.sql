@@ -10,6 +10,30 @@ create or replace PACKAGE BODY EMP_PKG IS
    
 
    FUNCTION valid_department(p_dept departments.department_id%TYPE DEFAULT NULL) RETURN BOOLEAN;
+   
+   PROCEDURE audit_newemp(p_empname employees.first_name%type);
+   
+   ---------------------------------------------------------------------------------------------
+   
+   PROCEDURE audit_newemp(p_empname employees.first_name%type) IS
+      PRAGMA AUTONOMOUS_TRANSACTION;
+      l_user VARCHAR2(100);
+   BEGIN
+      SELECT USER
+        INTO l_user
+        FROM dual;
+        
+      INSERT INTO log_newemp 
+      VALUES (log_new_emp_seq.NEXTVAL, l_user, SYSTIMESTAMP, p_empname);
+      COMMIT;
+      
+      dbms_output.put_line('Registro de log actualizado correctamente');
+   EXCEPTION
+      WHEN OTHERS THEN
+         dbms_output.put_line('Error al insertar un registro en log_newemp');
+         dbms_output.put_line('Error: ' || SQLCODE);
+         dbms_output.put_line('Mensaje: ' || sqlerrm);
+   END audit_newemp;
 
    /*===============================================================+
    PROCEDURE:    add_employee
@@ -52,7 +76,10 @@ create or replace PACKAGE BODY EMP_PKG IS
       IF valid_department(p_deptid) THEN
          SELECT MAX(employee_id) + 1 INTO l_employees_seq
            FROM employees;
-
+          
+         -- Inserta un nuevo registro en el log de la tabla de empleados
+         audit_newemp(p_first_name);
+         
          INSERT INTO employees (
             employee_id,
             first_name,
