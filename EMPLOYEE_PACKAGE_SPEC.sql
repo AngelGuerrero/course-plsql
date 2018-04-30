@@ -2,8 +2,8 @@
    Filename: EMPLOYEE_PACKAGE_SPEC.sql
    Component: Package
    Package: EMPLOYEE_PACKAGE
-   Designer: Luis ﾃ］gel De Santiago Guerrero
-   Developer: Luis ﾃ］gel De Santiago Guerrero
+   Designer: Luis ﾃ?ngel De Santiago Guerrero
+   Developer: Luis ﾃ?ngel De Santiago Guerrero
    Version: 1.0
    Description: Paquete para el manejo de datos en la tabla employees
 /*============================================================================*/
@@ -37,7 +37,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn del procedimiento.
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn del procedimiento.
    +================================================================*/
    PROCEDURE add_employee(
                           p_first_name IN employees.first_name%TYPE DEFAULT '',
@@ -72,7 +72,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de procedimiento.
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de procedimiento.
    +================================================================*/
    PROCEDURE add_employee(
                           p_deptid IN employees.department_id%TYPE,
@@ -96,7 +96,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn del procedimiento
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn del procedimiento
    +================================================================*/
    PROCEDURE get_employee(
                           p_emp_id IN employees.employee_id%TYPE DEFAULT NULL,
@@ -120,7 +120,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
    +================================================================*/
    FUNCTION get_employee(p_emp_id IN employees.employee_id%TYPE)
       RETURN employees%ROWTYPE;
@@ -139,7 +139,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
    +================================================================*/
    FUNCTION get_employee(p_family_name IN employees.last_name%TYPE)
       RETURN employees%ROWTYPE;
@@ -158,7 +158,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
    +================================================================*/
    FUNCTION print_employee(p_employee IN employees%ROWTYPE)
       RETURN VARCHAR2;
@@ -178,7 +178,7 @@ CREATE OR REPLACE PACKAGE EMP_PKG IS
 
       HISTORY
       Version     Date         Author                    Change Reference
-      1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creacion del procedimiento
+      1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creacion del procedimiento
    +================================================================*/
    PROCEDURE init_depts;
 

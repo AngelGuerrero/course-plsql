@@ -30,7 +30,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
    HISTORY
    Version     Date         Author                    Change Reference
-   1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn del procedimiento.
+   1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn del procedimiento.
    +================================================================*/
    PROCEDURE add_employee(
                            p_first_name employees.first_name%TYPE DEFAULT '',
@@ -47,7 +47,8 @@ create or replace PACKAGE BODY EMP_PKG IS
    l_employees_seq employees.employee_id%TYPE;
    BEGIN
       IF valid_department(p_deptid) THEN
-         SELECT MAX(employee_id) + 1 INTO l_employees_seq
+         SELECT MAX(employee_id) + 1 
+           INTO l_employees_seq
            FROM employees;
 
          INSERT INTO employees (
@@ -123,7 +124,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de procedimiento.
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de procedimiento.
    +================================================================*/
    PROCEDURE add_employee(
                           p_deptid employees.department_id%TYPE,
@@ -155,7 +156,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn del procedimiento
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn del procedimiento
    +================================================================*/
    PROCEDURE get_employee(
                          p_emp_id IN employees.employee_id%TYPE DEFAULT NULL,
@@ -199,7 +200,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
    +================================================================*/
    FUNCTION get_employee(p_emp_id IN employees.employee_id%TYPE) RETURN employees%ROWTYPE IS
       l_retval employees%ROWTYPE;
@@ -239,7 +240,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
    +================================================================*/
    FUNCTION get_employee(p_family_name IN employees.last_name%TYPE) RETURN employees%ROWTYPE IS
       l_retval employees%ROWTYPE;
@@ -285,7 +286,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn.
    +================================================================*/
    FUNCTION print_employee(p_employee IN employees%ROWTYPE) RETURN VARCHAR2 IS
       l_employee_null EXCEPTION;
@@ -327,7 +328,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn
    +================================================================*/
    FUNCTION valid_department(p_dept departments.department_id%TYPE DEFAULT NULL) RETURN BOOLEAN IS
       deptname departments.department_name%TYPE;
@@ -368,7 +369,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
      HISTORY
      Version     Date         Author                    Change Reference
-     1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creacion del procedimiento
+     1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creacion del procedimiento
    +================================================================*/
    PROCEDURE init_depts IS
       l_count_t NUMBER;
@@ -415,7 +416,7 @@ create or replace PACKAGE BODY EMP_PKG IS
 
    HISTORY
    Version     Date         Author                    Change Reference
-   1.0         21/03/2018   ﾃ］gel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn
+   1.0         21/03/2018   ﾃ?ngel Guerrero.           1. Creaciﾃｳn de la funciﾃｳn
    +================================================================*/
    FUNCTION chk_init_depts RETURN BOOLEAN IS
    BEGIN

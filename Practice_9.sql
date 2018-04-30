@@ -27,11 +27,7 @@ DECLARE
    l_text VARCHAR2(4001);
    l_person PERSONNEL.rowtype;
 BEGIN
---   SELECT 
---   RESUME INTO l_text
---     FROM PERSONNEL
---    WHERE personnel_id = 1;
-    
+   
     SELECT
          * INTO l_person
       FROM PERSONNEL
